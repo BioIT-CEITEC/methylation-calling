@@ -35,7 +35,8 @@
           "RRBS_MseI": "RRBS MseI",
           "target_enrichment": "target enrichment",
           "whole_genome": "whole genome"
-        },
+        }
+      },
       "type_seq": {
         "label": "Seq Type",
         "type": "enum",
@@ -66,7 +67,9 @@
           }
         },
         "list": ##INCLUDE:reference_info/reference2.json##
+      
       }
+    }
     },
     "detailed": {
       "methylation_calling": {
