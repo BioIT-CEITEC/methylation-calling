@@ -58,7 +58,7 @@ def alignment_input(wildcards):
 # enrichment_method - RRBS_MspI RRBS_MseI target_enrichment whole_genome
 # type_seq pbat_seq em_seq BS_seq
 
-bismark_alignment_params = [" --nucleotide_coverage "]
+bismark_alignment_params = [" --nucleotide_coverage -N 1 "]
 if config["enrichment_method"] == "RRBS_MspI" or config["enrichment_method"] == "RRBS_MseI" :
     bismark_alignment_params.append(" --non_directional ")
 

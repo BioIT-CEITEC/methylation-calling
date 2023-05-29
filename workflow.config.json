@@ -22,7 +22,7 @@
     "sample_name"
   ],
   "requested_params": [
-    "is_paired",
+    "is_paired"
   ],
   "gui_params": {
     "primary": {
