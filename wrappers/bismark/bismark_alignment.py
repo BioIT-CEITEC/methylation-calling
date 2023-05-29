@@ -1,40 +1,28 @@
-######################################
-# wrapper for rule: bismark alignment
-######################################
-import re
-import subprocess
+"""Snakemake wrapper for aligning methylation BS-Seq data using Bismark."""
+# https://github.com/FelixKrueger/Bismark/blob/master/bismark
+
+__author__ = "Roman Chernyatchik"
+__copyright__ = "Copyright (c) 2019 JetBrains"
+__email__ = "roman.chernyatchik@jetbrains.com"
+__license__ = "MIT"
+
+import os
+
 from snakemake.shell import shell
-shell.executable("/bin/bash")
-log_filename = str(snakemake.log)
-
-f = open(log_filename, 'wt')
-f.write("\n##\n## RULE: bismakr alignment \n##\n")
-f.close()
-
-version = str(subprocess.Popen("conda list ", shell=True, stdout=subprocess.PIPE).communicate()[0], 'utf-8')
-f = open(log_filename, 'at')
-f.write("## CONDA: "+version+"\n")
-f.close()
+from tempfile import TemporaryDirectory
 
 
+def basename_without_ext(file_path):
+    """Returns basename of file path, without the file extension."""
+
+    base = os.path.basename(file_path)
+
+    split_ind = 2 if base.endswith(".gz") else 1
+    base = ".".join(base.split(".")[:-split_ind])
+
+    return base
 
 
-
-bwa_ref_prefix = re.sub(".bwt$","",snakemake.input.ref)
-
-command = "bwa mem -t "+str(snakemake.threads)+\
-        " -R '@RG\\tID:"+snakemake.params.entity_name+"_"+snakemake.wildcards.sample+"\\tSM:"+snakemake.wildcards.sample+"\\tPL:illumina' -v 1 " +\
-        bwa_ref_prefix + " " + " ".join(snakemake.input.fastqs) + " 2>> " + log_filename + " | " +\
-        "samtools sort -@ " +str(snakemake.threads)+" -o "+snakemake.output.bam+" /dev/stdin 2>> "+log_filename
-f = open(log_filename, 'at')
-f.write("## COMMAND: "+command+"\n")
-f.close()
-shell(command)
-
-
-#######
-
-# definice
 extra = snakemake.params.get("extra", "")
 cmdline_args = ["bismark {extra} --bowtie2"]
 
@@ -45,6 +33,10 @@ if outdir:
 genome_indexes_dir = os.path.dirname(snakemake.input.bismark_indexes_dir)
 cmdline_args.append("{genome_indexes_dir}")
 
+if not snakemake.output.get("bam", None):
+    raise ValueError("bismark/bismark: Error 'bam' output file isn't specified.")
+if not snakemake.output.get("report", None):
+    raise ValueError("bismark/bismark: Error 'report' output file isn't specified.")
 
 # basename
 if snakemake.params.get("basename", None):
@@ -53,7 +45,6 @@ if snakemake.params.get("basename", None):
 else:
     basename = None
 
-#!!!!
 # reads input
 single_end_mode = snakemake.input.get("fq", None)
 if single_end_mode:

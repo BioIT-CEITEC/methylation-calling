@@ -65,7 +65,12 @@ if config["lib_ROI"]=="wgs" or config["lib_ROI"]=="WGS":
     config["deduplication"] = True
 else:
     config["deduplication"] = False
-#
+
+# reports
+config["qc_qualimap_DNA"]=True
+config["qc_samtools"]=True
+config["qc_picard_DNA"]=True
+
 wildcard_constraints:
     sample = "|".join(sample_tab.sample_name),
     read_pair_tag = "(_R.)?"
@@ -80,8 +85,9 @@ def get_ruleall_output(wildcards):
 rule all:
     input:  expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
             expand("mapped/{sample}.bam.bai", sample = sample_tab.sample_name),
-            get_ruleall_output
-            # "qc_reports/all_samples/alignment_DNA_multiqc/multiqc.html"
+            get_ruleall_output,
+            expand("qc_reports/{sample}/single_sample_alignment_report.html", sample = sample_tab.sample_name),
+            expand("qc_reports/{sample}/multiqc.html", sample = sample_tab.sample_name)
 
 
 ##### Modules #####

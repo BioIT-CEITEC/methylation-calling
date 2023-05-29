@@ -51,52 +51,67 @@ rule qc_samtools:
     script: "../wrappers/qc_samtools/script.py"
 
 
-###
+########################################################################################################################
+def multiqc_report_input(wildcards):
+    input = {}
+    if wildcards.sample != "all_samples":
+        if config["qc_qualimap_DNA"]:
+            input['qc_qualimap_DNA'] = "qc_reports/{sample}/qc_qualimap_DNA/{sample}/qualimapReport.html"
+        if config["qc_samtools"]:
+            input['qc_samtools'] = "qc_reports/{sample}/qc_samtools/{sample}.idxstats.tsv"
+        if config["qc_picard_DNA"]:
+            input['qc_picard_DNA'] = "qc_reports/{sample}/qc_picard_DNA/picard.tsv"
 
-rule multiqc:
-    input:
-        "results/reports/{SAMPLE}/{SAMPLE}_R1_fastqc.html",
-        "results/reports/{SAMPLE}/{SAMPLE}_R2_fastqc.html",
-        "results/reports/{SAMPLE}/{SAMPLE}_R1_val_1_fastqc.html",
-        "results/reports/{SAMPLE}/{SAMPLE}_R2_val_2_fastqc.html",
-        "results/reports/bismark_not_deduplicated/{SAMPLE}/{SAMPLE}.bismark2report.html",
-        "results/reports/qualimap/{SAMPLE}/qualimapReport.html"
-    output:
-        directory("results/reports/multiqc/{SAMPLE}")
-    params:
-        basename="{SAMPLE}",
-        INDIRECTORY="results/reports/bismark_not_deduplicated/{SAMPLE}/"
-        # DIRECTORY1="results/reports/bismark_deduplicated/{SAMPLE}",        
-    threads: 
-        6
-    log:
-        "logs/multiqc/{SAMPLE}_multiqc.log"
-    conda:
-        os.path.join(workflow.basedir, "envs/multiqc.yaml")
-    shell:
-        """
-        mkdir {output}
-        multiqc --force -o {output} -n {params.basename} {params.INDIRECTORY} >> {log} 2>&1
-        """
+        if config["methylation_calling"]:
+            input['mbias_report'] = "qc_reports/{sample}/bismark/m_bias/M-bias.txt",
+            input['splitting_report'] = "qc_reports/{sample}/bismark/meth_extract/sample_splitting_report.txt"
+
+        input['bismark_report'] = os.path.join("qc_reports/{sample}/bismark/align/",SEPEtag,"_report.txt"),
+        input['bismark_nucleotide_stats'] = "qc_reports/{sample}/bismark/bam2nuc/nucleotide_stats.txt"
+
+    else:
+        input['per_sample_reports'] = expand("qc_reports/{sample}/single_sample_alignment_report.html",sample=sample_tab.sample_name)
+
+    return input
 
 
+rule multiqc_report:
+    input:  unpack(multiqc_report_input)
+    output: html="qc_reports/{sample}/multiqc.html"
+    log:    "logs/{sample}/multiqc.log"
+    params: multiqc_config = workflow.basedir+"/wrappers/multiqc_report/multiqc_config.txt",
+            multiqc_path = "qc_reports/{sample}/"
+    conda: "../wrappers/multiqc_report/env.yaml"
+    script: "../wrappers/multiqc_report/script.py"
+
+########################################################################################################################
+def per_sample_alignment_report_input(wildcards):
+    input = {}
+    input['multiqc'] = "qc_reports/{sample}/multiqc.html"
+
+    if config["qc_qualimap_DNA"]:
+        input['qc_qualimap_DNA'] = "qc_reports/{sample}/qc_qualimap_DNA/{sample}/qualimapReport.html"
+    if config["qc_samtools"]:
+        input['qc_samtools'] = "qc_reports/{sample}/qc_samtools/{sample}.idxstats.tsv"
+    if config["qc_picard_DNA"]:
+        input['qc_picard_DNA'] = "qc_reports/{sample}/qc_picard_DNA/picard.tsv"
+
+    if config["methylation_calling"]:
+        input['mbias_report'] = "qc_reports/{sample}/bismark/m_bias/M-bias.txt",
+        input['splitting_report'] = "qc_reports/{sample}/bismark/meth_extract/sample_splitting_report.txt"
+
+    input['bismark_report'] = os.path.join("qc_reports/{sample}/bismark/align/",SEPEtag,"_report.txt"),
+    input['bismark_nucleotide_stats'] = "qc_reports/{sample}/bismark/bam2nuc/nucleotide_stats.txt"
+
+    return input
+
+rule per_sample_alignment_report:
+    input:  unpack(per_sample_alignment_report_input)
+    output: sample_report = "qc_reports/{sample}/single_sample_alignment_report.html",
+    params: sample_name = "{sample}",
+            config = "./config.json",
+            paired = paired,
+    conda: "../wrappers/per_sample_alignment_report/env.yaml"
+    script: "../wrappers/per_sample_alignment_report/script.Rmd"
 
 
-
-# add input function with variable inputs... or make completely dependent on config["methylation_calling"]
-# rule bismark2report_pe:
-#     input:
-#         alignment_report="results/reports/{sample}/{sample}_PE_report.txt",
-#         nucleotide_report="results/reports/{sample}/{sample}.nucleotide_stats.txt",
-#         mbias_report="methylation_calling/{sample}/{sample}.M-bias.txt",
-#         splitting_report="methylation_calling/{sample}/{sample}_splitting_report.txt"
-#     output:
-#         html="methylation_calling/{sample}/{sample}.bismark2report.html"
-#     log:
-#         "logs/bismark/{sample}_bismark2report_no_deduplication.log"
-#     params:
-#         skip_optional_reports=True
-#     conda:
-#         "../wrappers/bismark/env.yaml"
-#     script:
-#         "../wrappers/bismark/bismark2report_pe.py"
