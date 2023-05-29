@@ -68,19 +68,21 @@
         },
         "list": ##INCLUDE:reference_info/reference2.json##
       }
-    }
-  },
-  "detailed": {
-    "methylation_calling": {
-      "label": "Call methylation values",
-      "type": "bool",
-      "default": true
     },
-    "keep_not_markDups_bam": {
-      "label": "Keep not_markDups_bam file",
-      "type": "bool",
-      "default": false
+
+    "detailed": {
+      "methylation_calling": {
+        "label": "Call methylation values",
+        "type": "bool",
+        "default": true
+      },
+      "keep_not_markDups_bam": {
+        "label": "Keep not_markDups_bam file",
+        "type": "bool",
+        "default": false
+      }
     }
+    
   }
 }
 
