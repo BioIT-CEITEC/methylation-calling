@@ -1,9 +1,18 @@
-- configurace pro parove/single end ready
+odlisit: RRBS WGBS Targeted BS EMseq
+odlisit directional x nondirectional
 
-https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md#rrbs-specific-options-mspi-digested-material
-- configurace  pro directional/undirectional
-- configurace pro RRBS
-- projit nastaveni
+# CONFIGS
+# enrichment_method - RRBS_MspI RRBS_MseI target_enrichment whole_genome
+# type_seq pbat_seq em_seq BS_seq
 
-trim_galore --non_directional --rrbs --paired <read1.fq.gz> <read2.fq.gz>
 
+
+nekopirovat slozku references - dat do workflow.json nebo nekam
+
+
+qc picard jak se lisi interval_list od BEDu?
+nakopirovat BEDY do references a zkontrolovat jestli UCSC nebo ENSEMBL
+update tools, at least   multiqc = 1.14
+
+upravit wrappery
+sjednotit logy

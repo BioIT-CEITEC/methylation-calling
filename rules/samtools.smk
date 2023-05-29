@@ -2,12 +2,13 @@
 
 rule samtools_sort:
     input:
-        "bismark/{SAMPLE}/{SAMPLE}.bam"
+        "results/bismark/{SAMPLE}/{SAMPLE}.bam"
     output:
-       protected("bismark/{SAMPLE}/{SAMPLE}.sorted.bam")
+       protected("results/bismark/{SAMPLE}/{SAMPLE}.sorted.bam")
     threads:
         12  # Samtools takes additional threads through its option -@
-    conda: "../envs/samtools.yaml"
+    conda:
+        os.path.join(workflow.basedir, "envs/samtools.yaml")
     log:
         "logs/samtools/{SAMPLE}_samtools_sort.log"
     shell:
@@ -18,10 +19,11 @@ rule samtools_sort:
 
 rule samtools_index:
     input:
-        "bismark/{SAMPLE}/{SAMPLE}.sorted.bam"
+        "results/bismark/{SAMPLE}/{SAMPLE}.sorted.bam"
     output:
-        protected("bismark/{SAMPLE}/{SAMPLE}.sorted.bam.bai")
-    conda: "../envs/samtools.yaml"
+        protected("results/bismark/{SAMPLE}/{SAMPLE}.sorted.bam.bai")
+    conda:
+        os.path.join(workflow.basedir, "envs/samtools.yaml")
     log:
         "logs/samtools/{SAMPLE}_samtools_index.log"
     shell:
@@ -30,14 +32,15 @@ rule samtools_index:
 
 rule samtools_sort_dedup:
     input:
-        "bismark/{SAMPLE}/{SAMPLE}.deduplicated.bam"
+        "results/bismark_deduplicated/{SAMPLE}/{SAMPLE}.deduplicated.bam"
     output:
-        protected("bismark/{SAMPLE}/{SAMPLE}.deduplicated.sorted.bam")
+        protected("results/bismark_deduplicated/{SAMPLE}/{SAMPLE}.deduplicated.sorted.bam")
     threads: 
         12 # Samtools takes additional threads through its option -@
     params:
         prefix="{SAMPLE}.deduplicated"
-    conda: "../envs/samtools.yaml"
+    conda:
+        os.path.join(workflow.basedir, "envs/samtools.yaml")
     log:
         "logs/samtools/{SAMPLE}_samtools_sort_dedup.log"
     shell:
@@ -48,10 +51,11 @@ rule samtools_sort_dedup:
 
 rule samtools_index_dedup:
     input:
-        "bismark/{SAMPLE}/{SAMPLE}.deduplicated.sorted.bam"
+        "results/bismark_deduplicated/{SAMPLE}/{SAMPLE}.deduplicated.sorted.bam"
     output:
-        protected("bismark/{SAMPLE}/{SAMPLE}.deduplicated.sorted.bam.bai")
-    conda: "../envs/samtools.yaml"
+        protected("results/bismark_deduplicated/{SAMPLE}/{SAMPLE}.deduplicated.sorted.bam.bai")
+    conda:
+        os.path.join(workflow.basedir, "envs/samtools.yaml")
     log:
         "logs/samtools/{SAMPLE}_samtools_index_dedup.log"
     shell: 

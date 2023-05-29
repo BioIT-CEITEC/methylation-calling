@@ -1,7 +1,5 @@
-######################################
-# wrapper for rule: deduplicate_bismark
-######################################
-
+"""Snakemake wrapper for Bismark aligned reads deduplication using deduplicate_bismark."""
+# https://github.com/FelixKrueger/Bismark/blob/master/deduplicate_bismark
 
 __author__ = "Roman Chernyatchik"
 __copyright__ = "Copyright (c) 2019 JetBrains"

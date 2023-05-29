@@ -1,6 +1,6 @@
-######################################
-# wrapper for rule: bam2nuc_for_genome
-######################################
+"""Snakemake wrapper for bam2nuc tool that calculates mono- and di-nucleotide coverage of the reads and compares them with average genomic sequence
+composition."""
+# https://github.com/FelixKrueger/Bismark/blob/master/bam2nuc
 
 __author__ = "Roman Chernyatchik"
 __copyright__ = "Copyright (c) 2019 JetBrains"
@@ -8,6 +8,7 @@ __email__ = "roman.chernyatchik@jetbrains.com"
 __license__ = "MIT"
 
 import os
+
 from snakemake.shell import shell
 
 extra = snakemake.params.get("extra", "")
