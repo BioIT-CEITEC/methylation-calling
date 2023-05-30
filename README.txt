@@ -5,14 +5,12 @@ odlisit directional x nondirectional
 # enrichment_method - RRBS_MspI RRBS_MseI target_enrichment whole_genome
 # type_seq pbat_seq em_seq BS_seq
 
-
+https://github.com/FelixKrueger/Bismark/blob/master/CHANGELOG.md  nejake zmeny v parametrech
 
 nekopirovat slozku references - dat do workflow.json nebo nekam
 
 
-qc picard jak se lisi interval_list od BEDu?
-nakopirovat BEDY do references a zkontrolovat jestli UCSC nebo ENSEMBL
 update tools, at least   multiqc = 1.14
 
-upravit wrappery
+upravit wrappery?
 sjednotit logy

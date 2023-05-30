@@ -65,7 +65,7 @@ if config["enrichment_method"] == "RRBS_MspI" or config["enrichment_method"] == 
 if config["type_seq"]=="pbat_seq":
     bismark_alignment_params.append(" --pbat ")
 elif config["type_seq"]=="em_seq":
-    bismark_alignment_params.append(" --maxins 1000 --non_directional ")
+    bismark_alignment_params.append(" --maxins 1000 ")
 
 
 rule bismark_alignment:
