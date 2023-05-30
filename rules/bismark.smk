@@ -5,7 +5,7 @@ rule copy_reference:
     input:
         expand("{ref_dir}/seq/{ref}.fa",ref_dir=reference_directory,ref=config["reference"])[0]
     output:
-        os.path.join("results/references",config["genome_fasta"])
+        os.path.join("results/references",config["reference"])
     shell:
         "cp {input} {output}"
 
