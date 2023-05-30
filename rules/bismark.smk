@@ -76,8 +76,8 @@ rule bismark_alignment:
         genomic_freq="results/references/genomic_nucleotide_frequencies.txt"
     output:
         bam="mapped/{sample}.not_markDups.bam",
-        report=os.path.join("qc_reports/{sample}/bismark/align/",SEPEtag,"_report.txt"),
-        nucleotide_stats="qc_reports/{sample}/bismark/bam2nuc/nucleotide_stats.txt"
+        report=os.path.join("qc_reports/{sample}/bismark/{sample}_",SEPEtag,"_report.txt"),
+        nucleotide_stats="qc_reports/{sample}/bismark/{sample}.nucleotide_stats.txt"
     log:
         "logs/{sample}/bismark_alignment.log"
     threads: 

@@ -6,7 +6,7 @@ if config["deduplication"]:
         input: "mapped/{sample}.not_markDups.bam",
         output:
             bam="mapped/{sample}.markDups.bam",
-            report="mapped/{sample}_deduplication_report.txt",
+            report="mapped/{sample}.deduplication_report.txt",
         log:
             "logs/{sample}/bismark_deduplication.log"
         params:

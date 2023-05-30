@@ -71,6 +71,9 @@ config["qc_qualimap_DNA"]=True
 config["qc_samtools"]=True
 config["qc_picard_DNA"]=True
 
+#empty methylation_calling folder
+os.mkdir("methylation_calling")
+
 wildcard_constraints:
     sample = "|".join(sample_tab.sample_name),
     read_pair_tag = "(_R.)?"
@@ -86,8 +89,7 @@ rule all:
     input:  expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
             expand("mapped/{sample}.bam.bai", sample = sample_tab.sample_name),
             get_ruleall_output,
-            expand("qc_reports/{sample}/single_sample_alignment_report.html", sample = sample_tab.sample_name),
-            expand("qc_reports/{sample}/multiqc.html", sample = sample_tab.sample_name)
+            "qc_reports/multiqc.html"
 
 
 ##### Modules #####
@@ -96,5 +98,4 @@ include: "rules/trimming.smk"
 include: "rules/bismark.smk"
 include: "rules/bismark_deduplication.smk"
 include: "rules/bismark_methylation.smk"
-
-# include: "rules/reports.smk"
+include: "rules/reports.smk"

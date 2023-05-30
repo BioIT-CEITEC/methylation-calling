@@ -58,12 +58,12 @@ def multiqc_report_input(wildcards):
     input['qc_samtools'] = "qc_reports/{sample}/qc_samtools/{sample}.idxstats.tsv"
     input['qc_picard_DNA'] = "qc_reports/{sample}/qc_picard_DNA/picard.tsv"
 
-    if config["methylation_calling"]:
-        input['mbias_report'] = "qc_reports/{sample}/bismark/m_bias/M-bias.txt",
-        input['splitting_report'] = "qc_reports/{sample}/bismark/meth_extract/sample_splitting_report.txt"
+    input['bismark_report'] = os.path.join("qc_reports/{sample}/bismark/{sample}_",SEPEtag,"_report.txt"),
+    input['bismark_nucleotide_stats'] = "qc_reports/{sample}/bismark/{sample}.nucleotide_stats.txt"
 
-    input['bismark_report'] = os.path.join("qc_reports/{sample}/bismark/align/",SEPEtag,"_report.txt"),
-    input['bismark_nucleotide_stats'] = "qc_reports/{sample}/bismark/bam2nuc/nucleotide_stats.txt"
+    if config["methylation_calling"]:
+        input['mbias_report'] = "qc_reports/{sample}/bismark/{sample}_M-bias.txt",
+        input['splitting_report'] = "qc_reports/{sample}/bismark/{sample}_splitting_report.txt"
 
     return input
 

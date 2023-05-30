@@ -1,5 +1,3 @@
-odlisit: RRBS WGBS Targeted BS EMseq
-odlisit directional x nondirectional
 
 # CONFIGS
 # enrichment_method - RRBS_MspI RRBS_MseI target_enrichment whole_genome

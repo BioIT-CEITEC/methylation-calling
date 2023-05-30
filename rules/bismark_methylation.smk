@@ -21,8 +21,8 @@ if read_pair_tags == [""]: #SINGLE END
             "mapped/{sample}.bam"
         output:
             mbias_r1="qc_reports/{sample}/bismark/m_bias/M-bias_R1.png",
-            mbias_report="qc_reports/{sample}/bismark/m_bias/M-bias.txt",
-            splitting_report="qc_reports/{sample}/bismark/meth_extract/sample_splitting_report.txt",
+            mbias_report="qc_reports/{sample}/bismark/{sample}_M-bias.txt",
+            splitting_report="qc_reports/{sample}/bismark/{sample}_splitting_report.txt",
             # coverage file - 1-based chromosome coordinates ('inclusive') methylation info: % and counts
             methylome_CpG_cov="methylation_calling/{sample}/{sample}.bismark.cov.gz",
             # BedGraph with methylation percentage: 0-based start, 1-based end (exclusive)
@@ -51,8 +51,8 @@ else:  # PAIRED END
     output:
         mbias_r1="qc_reports/{sample}/bismark/m_bias/M-bias_R1.png",
         mbias_r2="qc_reports/{sample}/bismark/m_bias/M-bias_R2.png",
-        mbias_report="qc_reports/{sample}/bismark/m_bias/M-bias.txt",
-        splitting_report="qc_reports/{sample}/bismark/meth_extract/sample_splitting_report.txt",
+        mbias_report="qc_reports/{sample}/bismark/{sample}_M-bias.txt",
+        splitting_report="qc_reports/{sample}/bismark/{sample}_splitting_report.txt",
         # coverage file - 1-based chromosome coordinates ('inclusive') methylation info: % and counts
         methylome_CpG_cov="methylation_calling/{sample}/{sample}.bismark.cov.gz",
         # BedGraph with methylation percentage: 0-based start, 1-based end (exclusive)
