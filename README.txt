@@ -14,3 +14,5 @@ update tools, at least   multiqc = 1.14
 
 upravit wrappery?
 sjednotit logy
+
+vytvorit methylation_calling slozku

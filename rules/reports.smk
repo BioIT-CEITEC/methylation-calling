@@ -17,8 +17,8 @@ rule qc_picard_DNA:
     output: table = "qc_reports/{sample}/qc_picard_DNA/picard.tsv",
     log:    "logs/{sample}/qc_picard_DNA.log"
     params: per_target = "qc_reports/{sample}/qc_picard_DNA/picard.per_target.tsv",
-            wgs_chart = "qc_reports/{sample}/qc_picard_DNA/picard.wgs_chart.pdf",
-            lib_ROI = config["lib_ROI"]
+        wgs_chart = "qc_reports/{sample}/qc_picard_DNA/picard.wgs_chart.pdf",
+        lib_ROI = config["lib_ROI"]
     threads: 1
     resources:  mem = 20
     conda: "../wrappers/qc_picard_DNA/env.yaml"
@@ -44,7 +44,7 @@ rule qc_qualimap_DNA:
 rule qc_samtools:
     input:  bam = "mapped/{sample}.bam"
     output: idxstats = "qc_reports/{sample}/qc_samtools/{sample}.idxstats.tsv",
-            flagstats = "qc_reports/{sample}/qc_samtools/{sample}.flagstat.tsv"
+        flagstats = "qc_reports/{sample}/qc_samtools/{sample}.flagstat.tsv"
     log:    "logs/{sample}/qc_samtools.log"
     threads: 1
     conda: "../wrappers/qc_samtools/env.yaml"
@@ -54,47 +54,9 @@ rule qc_samtools:
 ########################################################################################################################
 def multiqc_report_input(wildcards):
     input = {}
-    if wildcards.sample != "all_samples":
-        if config["qc_qualimap_DNA"]:
-            input['qc_qualimap_DNA'] = "qc_reports/{sample}/qc_qualimap_DNA/{sample}/qualimapReport.html"
-        if config["qc_samtools"]:
-            input['qc_samtools'] = "qc_reports/{sample}/qc_samtools/{sample}.idxstats.tsv"
-        if config["qc_picard_DNA"]:
-            input['qc_picard_DNA'] = "qc_reports/{sample}/qc_picard_DNA/picard.tsv"
-
-        if config["methylation_calling"]:
-            input['mbias_report'] = "qc_reports/{sample}/bismark/m_bias/M-bias.txt",
-            input['splitting_report'] = "qc_reports/{sample}/bismark/meth_extract/sample_splitting_report.txt"
-
-        input['bismark_report'] = os.path.join("qc_reports/{sample}/bismark/align/",SEPEtag,"_report.txt"),
-        input['bismark_nucleotide_stats'] = "qc_reports/{sample}/bismark/bam2nuc/nucleotide_stats.txt"
-
-    else:
-        input['per_sample_reports'] = expand("qc_reports/{sample}/single_sample_alignment_report.html",sample=sample_tab.sample_name)
-
-    return input
-
-
-rule multiqc_report:
-    input:  unpack(multiqc_report_input)
-    output: html="qc_reports/{sample}/multiqc.html"
-    log:    "logs/{sample}/multiqc.log"
-    params: multiqc_config = workflow.basedir+"/wrappers/multiqc_report/multiqc_config.txt",
-            multiqc_path = "qc_reports/{sample}/"
-    conda: "../wrappers/multiqc_report/env.yaml"
-    script: "../wrappers/multiqc_report/script.py"
-
-########################################################################################################################
-def per_sample_alignment_report_input(wildcards):
-    input = {}
-    input['multiqc'] = "qc_reports/{sample}/multiqc.html"
-
-    if config["qc_qualimap_DNA"]:
-        input['qc_qualimap_DNA'] = "qc_reports/{sample}/qc_qualimap_DNA/{sample}/qualimapReport.html"
-    if config["qc_samtools"]:
-        input['qc_samtools'] = "qc_reports/{sample}/qc_samtools/{sample}.idxstats.tsv"
-    if config["qc_picard_DNA"]:
-        input['qc_picard_DNA'] = "qc_reports/{sample}/qc_picard_DNA/picard.tsv"
+    input['qc_qualimap_DNA'] = "qc_reports/{sample}/qc_qualimap_DNA/{sample}/qualimapReport.html"
+    input['qc_samtools'] = "qc_reports/{sample}/qc_samtools/{sample}.idxstats.tsv"
+    input['qc_picard_DNA'] = "qc_reports/{sample}/qc_picard_DNA/picard.tsv"
 
     if config["methylation_calling"]:
         input['mbias_report'] = "qc_reports/{sample}/bismark/m_bias/M-bias.txt",
@@ -105,13 +67,23 @@ def per_sample_alignment_report_input(wildcards):
 
     return input
 
-rule per_sample_alignment_report:
-    input:  unpack(per_sample_alignment_report_input)
-    output: sample_report = "qc_reports/{sample}/single_sample_alignment_report.html",
-    params: sample_name = "{sample}",
-            config = "./config.json",
-            paired = paired,
-    conda: "../wrappers/per_sample_alignment_report/env.yaml"
-    script: "../wrappers/per_sample_alignment_report/script.Rmd"
+
+rule multiqc_report:
+    input:  unpack(multiqc_report_input)
+    output: html="qc_reports/multiqc.html"
+    log:    "logs/multiqc.log"
+    params: multiqc_config = workflow.basedir+"/wrappers/multiqc_report/multiqc_config.txt",
+        multiqc_path = "qc_reports/{sample}/"
+    conda: "../wrappers/multiqc_report/env.yaml"
+    script: "../wrappers/multiqc_report/script.py"
+
+########################################################################################################################
 
 
+########################################################################################################################
+#
+# rule final_alignment_report:
+#     input:  all_sample_multiqc = "qc_reports/multiqc.html"
+#     output: html = "qc_reports/final_alignment_report.html"
+#     conda: "../wrappers/final_alignment_report/env.yaml"
+#     script: "../wrappers/final_alignment_report/script.Rmd"

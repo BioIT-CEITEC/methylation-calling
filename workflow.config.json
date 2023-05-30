@@ -12,7 +12,7 @@
       "qc_reports/*",
       "methylation_calling/*"
     ],
-    "report_index": "qc_reports/all_samples/alignment_DNA_multiqc/multiqc.html",
+    "report_index": "qc_reports/multiqc.html",
     "reports":[
       "qc_reports/*"
     ]
@@ -69,20 +69,13 @@
         "list": ##INCLUDE:reference_info/reference2.json##
       }
     },
-
     "detailed": {
       "methylation_calling": {
         "label": "Call methylation values",
         "type": "bool",
         "default": true
-      },
-      "keep_not_markDups_bam": {
-        "label": "Keep not_markDups_bam file",
-        "type": "bool",
-        "default": false
       }
     }
-    
   }
 }
 
