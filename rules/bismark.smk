@@ -5,16 +5,16 @@ rule copy_reference:
     input:
         expand("{ref_dir}/seq/{ref}.fa",ref_dir=reference_directory,ref=config["reference"])[0]
     output:
-        os.path.join("results/references",config["reference"])
+        expand("references/{ref}.fa",ref=config["reference"])[0]
     shell:
         "cp {input} {output}"
 
 # likely will need - sudo apt-get install libtbb2
 rule bismark_genome_preparation_fa_gz:
     input:
-        expand("results/references/{ref}.fa",ref=config["reference"])[0]
+        expand("references/{ref}.fa",ref=config["reference"])[0]
     output:
-        directory("results/references/Bisulfite_Genome")   
+        directory("references/Bisulfite_Genome")
     log:
         "logs/bismark/bismark_genome_preparation.log"
     params:
@@ -28,9 +28,9 @@ rule bismark_genome_preparation_fa_gz:
 
 rule bam2nuc_for_genome:
     input:
-        genome_fa=expand("results/references/{ref}.fa",ref=config["reference"])[0]
+        genome_fa=expand("references/{ref}.fa",ref=config["reference"])[0]
     output:
-        report="reports/genomic_nucleotide_frequencies.txt"
+        report="references/genomic_nucleotide_frequencies.txt"
     log:
         "logs/bismark/bismark2nuc.log"
     threads: 
@@ -71,12 +71,12 @@ elif config["type_seq"]=="em_seq":
 rule bismark_alignment:
     input:
         unpack(alignment_input),
-        genome=os.path.join("results/references",config["genome_fasta"]),
-        bismark_indexes_dir="results/references/Bisulfite_Genome",
-        genomic_freq="results/references/genomic_nucleotide_frequencies.txt"
+        genome=expand("references/{ref}.fa",ref=config["reference"])[0],
+        bismark_indexes_dir="references/Bisulfite_Genome",
+        genomic_freq="references/genomic_nucleotide_frequencies.txt"
     output:
         bam="mapped/{sample}.not_markDups.bam",
-        report=os.path.join("qc_reports/{sample}/bismark/{sample}_",SEPEtag,"_report.txt"),
+        report="qc_reports/{sample}/bismark/{sample}_" + str(SEPEtag) + "_report.txt",
         nucleotide_stats="qc_reports/{sample}/bismark/{sample}.nucleotide_stats.txt"
     log:
         "logs/{sample}/bismark_alignment.log"

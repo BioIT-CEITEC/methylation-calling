@@ -67,12 +67,18 @@ else:
     config["deduplication"] = False
 
 # reports
+config["trim_adapters"]=True
 config["qc_qualimap_DNA"]=True
 config["qc_samtools"]=True
 config["qc_picard_DNA"]=True
 
 #empty methylation_calling folder
-os.mkdir("methylation_calling")
+if not os.path.exists("methylation_calling"):
+    os.makedirs("methylation_calling")
+#empty references folder
+if not os.path.exists("references"):
+    os.makedirs("references")
+
 
 wildcard_constraints:
     sample = "|".join(sample_tab.sample_name),
@@ -81,7 +87,8 @@ wildcard_constraints:
 
 ##### Target rules #####
 def get_ruleall_output(wildcards):
-    if config["methylation_calling"]:
+    output_list = []
+    if config["methylation_calling"]:        
         output_list=expand("methylation_calling/{sample}/{sample}.bismark.cov.gz",sample=sample_tab.sample_name)
     return output_list
 

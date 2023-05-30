@@ -54,17 +54,18 @@ rule qc_samtools:
 ########################################################################################################################
 def multiqc_report_input(wildcards):
     input = {}
-    input['qc_qualimap_DNA'] = "qc_reports/{sample}/qc_qualimap_DNA/{sample}/qualimapReport.html"
-    input['qc_samtools'] = "qc_reports/{sample}/qc_samtools/{sample}.idxstats.tsv"
-    input['qc_picard_DNA'] = "qc_reports/{sample}/qc_picard_DNA/picard.tsv"
+    input['qc_qualimap_DNA'] = expand("qc_reports/{sample}/qc_qualimap_DNA/{sample}/qualimapReport.html", sample = sample_tab.sample_name)
+    input['qc_samtools'] = expand("qc_reports/{sample}/qc_samtools/{sample}.idxstats.tsv", sample = sample_tab.sample_name)
+    input['qc_picard_DNA'] = expand("qc_reports/{sample}/qc_picard_DNA/picard.tsv", sample = sample_tab.sample_name)
 
-    input['bismark_report'] = os.path.join("qc_reports/{sample}/bismark/{sample}_",SEPEtag,"_report.txt"),
-    input['bismark_nucleotide_stats'] = "qc_reports/{sample}/bismark/{sample}.nucleotide_stats.txt"
+    input['bismark_report'] = expand("qc_reports/{sample}/bismark/{sample}_{tag}_report.txt", sample = sample_tab.sample_name,tag=SEPEtag)
+    input['bismark_nucleotide_stats'] = expand("qc_reports/{sample}/bismark/{sample}.nucleotide_stats.txt", sample = sample_tab.sample_name)
 
     if config["methylation_calling"]:
-        input['mbias_report'] = "qc_reports/{sample}/bismark/{sample}_M-bias.txt",
-        input['splitting_report'] = "qc_reports/{sample}/bismark/{sample}_splitting_report.txt"
+        input['mbias_report'] = expand("qc_reports/{sample}/bismark/{sample}_M-bias.txt", sample = sample_tab.sample_name)
+        input['splitting_report'] = expand("qc_reports/{sample}/bismark/{sample}_splitting_report.txt", sample = sample_tab.sample_name)
 
+    print(input)
     return input
 
 
@@ -73,7 +74,7 @@ rule multiqc_report:
     output: html="qc_reports/multiqc.html"
     log:    "logs/multiqc.log"
     params: multiqc_config = workflow.basedir+"/wrappers/multiqc_report/multiqc_config.txt",
-        multiqc_path = "qc_reports/{sample}/"
+        multiqc_path = "qc_reports/"
     conda: "../wrappers/multiqc_report/env.yaml"
     script: "../wrappers/multiqc_report/script.py"
 
