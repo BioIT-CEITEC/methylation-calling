@@ -19,7 +19,7 @@ rule qc_picard_DNA:
     params: per_target = "qc_reports/{sample}/qc_picard_DNA/picard.per_target.tsv",
         wgs_chart = "qc_reports/{sample}/qc_picard_DNA/picard.wgs_chart.pdf",
         lib_ROI = config["lib_ROI"]
-    threads: 1
+    threads: 10
     resources:  mem = 20
     conda: "../wrappers/qc_picard_DNA/env.yaml"
     script: "../wrappers/qc_picard_DNA/script.py"
@@ -46,7 +46,7 @@ rule qc_samtools:
     output: idxstats = "qc_reports/{sample}/qc_samtools/{sample}.idxstats.tsv",
         flagstats = "qc_reports/{sample}/qc_samtools/{sample}.flagstat.tsv"
     log:    "logs/{sample}/qc_samtools.log"
-    threads: 1
+    threads: 5
     conda: "../wrappers/qc_samtools/env.yaml"
     script: "../wrappers/qc_samtools/script.py"
 
