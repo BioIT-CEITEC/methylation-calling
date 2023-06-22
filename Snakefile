@@ -66,11 +66,13 @@ if config["lib_ROI"]=="wgs" or config["lib_ROI"]=="WGS":
 else:
     config["deduplication"] = False
 
+
 # reports
 config["trim_adapters"]=True
 config["qc_qualimap_DNA"]=True
 config["qc_samtools"]=True
 config["qc_picard_DNA"]=True
+
 
 #empty methylation_calling folder
 if not os.path.exists("methylation_calling"):
@@ -78,6 +80,9 @@ if not os.path.exists("methylation_calling"):
 #empty references folder
 if not os.path.exists("references"):
     os.makedirs("references")
+
+# cretae empty file in methylation_calling folder
+open("methylation_calling/empty.txt", "w+").close()
 
 
 wildcard_constraints:
