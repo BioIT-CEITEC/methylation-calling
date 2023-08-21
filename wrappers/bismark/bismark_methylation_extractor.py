@@ -63,7 +63,7 @@ for (key, (prefix, suffix)) in key2prefix_suffix:
             )
         bam_file = snakemake.input[0]
         bam_name = os.path.basename(bam_file)
-        bam_wo_ext = os.path.splitext(bam_name)[0]
+        bam_wo_ext = os.path.splitext(bam_name)[0] # nahradit treba wildcard={sample}
 
         actual_path = os.path.join(output_dir, prefix + bam_wo_ext + suffix)
         if exp_path != actual_path:

@@ -5,12 +5,8 @@
 
 https://github.com/FelixKrueger/Bismark/blob/master/CHANGELOG.md  nejake zmeny v parametrech
 
-nekopirovat slozku references - dat do workflow.json nebo nekam
+?sjednotit logy
 
-
-update tools, at least   multiqc = 1.14
-
-upravit wrappery?
-sjednotit logy
-
-vytvorit methylation_calling slozku
+prepsat BISMARK wrappery
+OK DAT PRYC SORTand INDEX - bismark chce sorting podle nazvu readu, takze zbytecne navic
+DAT METHYLATION CALLING VOLBU automaticky na TRUE

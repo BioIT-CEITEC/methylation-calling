@@ -12,7 +12,7 @@ if config["enrichment_method"]=="RRBS_MspI" or config["enrichment_method"]=="RRB
 # elif config["type_seq"]=="pbat_seq" or config["type_seq"]=="em_seq": #uz otrimovano v readech
 #     bismark_methylation_params.append(" --ignore 5 --ignore_r2 5 --ignore_3prime 5 --ignore_3prime_r2 5 ")
 else:
-    bismark_methylation_params.append(" –-ignore_r2 2 --ignore_3prime_r2 2 ") #default
+    bismark_methylation_params.append(" --ignore_r2 2 --ignore_3prime_r2 2 ") #default
 
 
 if read_pair_tags == [""]: #SINGLE END
@@ -37,7 +37,7 @@ if read_pair_tags == [""]: #SINGLE END
         log:
             "logs/{sample}/bismark_methylation_extraction_se.log"
         threads:
-            10
+            5
         params:
             extra=bismark_methylation_params  # optional params string
         conda:
@@ -68,7 +68,7 @@ else:  # PAIRED END
         log:
             "logs/{sample}/bismark_methylation_extraction_pe.log"
         threads:
-            10
+            5
         params:
             extra=bismark_methylation_params  # optional params string
         conda:

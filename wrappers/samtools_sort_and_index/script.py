@@ -16,7 +16,7 @@ f.write("## CONDA: "+version+"\n")
 f.close()
 
 
-command = "samtools sort -@ " + str(snakemake.threads) + " -o " +snakemake.output.bam + " " + str(snakemake.input)
+command = "samtools sort -n -@ " + str(snakemake.threads) + " -o " +snakemake.output.bam + " " + str(snakemake.input)
 f = open(log_filename, 'at')
 f.write("## COMMAND: "+command+"\n")
 f.close()

@@ -7,10 +7,10 @@
     "inputs": "*/{sample}*fastq.gz",
     "outputs": [
       "mapped/{sample}.bam",
-      "mapped/{sample}.bam.bai",
       "logs/{sample}/*",
       "qc_reports/*",
-      "methylation_calling/*"
+      "methylation_calling/*",
+      "config.json"
     ],
     "report_index": "qc_reports/multiqc.html",
     "reports":[
@@ -53,6 +53,11 @@
         "default": "wgs",
         "list": ##INCLUDE:reference_info/lib_ROI.json##
       },
+      "methylation_calling": {
+        "label": "Call methylation values?",
+        "type": "bool",
+        "default": true
+      },
       "reference": {
         "label": "Genomic Reference",
         "type": "enum",
@@ -70,11 +75,6 @@
       }
     },
     "detailed": {
-      "methylation_calling": {
-        "label": "Call methylation values",
-        "type": "bool",
-        "default": true
-      }
     }
   }
 }

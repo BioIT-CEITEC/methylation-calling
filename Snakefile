@@ -93,13 +93,12 @@ wildcard_constraints:
 ##### Target rules #####
 def get_ruleall_output(wildcards):
     output_list = []
-    if config["methylation_calling"]:        
+    if config["methylation_calling"]:
         output_list=expand("methylation_calling/{sample}/{sample}.bismark.cov.gz",sample=sample_tab.sample_name)
     return output_list
 
 rule all:
     input:  expand("mapped/{sample}.bam",sample = sample_tab.sample_name),
-            expand("mapped/{sample}.bam.bai", sample = sample_tab.sample_name),
             get_ruleall_output,
             "qc_reports/multiqc.html"
 
